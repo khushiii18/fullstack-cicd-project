@@ -1,24 +1,4 @@
 services:
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: frontend:latest
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: backend:latest
-    environment:
-      MONGO_URL: mongodb://mongodb:27017/studentdb
-    depends_on:
-      - mongodb
-
-  mongodb:
-    image: mongo:7
-
   nginx:
     image: nginx:latest
     ports:
@@ -28,3 +8,23 @@ services:
     depends_on:
       - frontend
       - backend
+
+  frontend:
+    image: khushi1718/frontend:latest
+    depends_on:
+      - backend
+
+  backend:
+    image: khushi1718/backend:latest
+    environment:
+      MONGO_URL: mongodb://mongodb:27017/studentdb
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
